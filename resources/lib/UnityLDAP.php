@@ -134,7 +134,7 @@ class UnityLDAP extends ldapConn
         $max_pigid = $UnitySQL->getSiteVar('MAX_PIGID');
         $new_pigid = $max_pigid + 1;
 
-        while ($this->PIGIDNumInUse($new_pigid)) {
+        while ($this->GIDNumInUse($new_pigid)) {
             $new_pigid++;
         }
 
@@ -169,8 +169,15 @@ class UnityLDAP extends ldapConn
         return false;
     }
 
-    private function PIGIDNumInUse($id)
+    private function GIDNumInUse($id)
     {
+        $groups = $this->groupOU->getChildrenArray(true);
+        foreach ($groups as $group) {
+            if ($group["gidnumber"][0] == $id) {
+                return true;
+            }
+        }
+
         $pi_groups = $this->pi_groupOU->getChildrenArray(true);
         foreach ($pi_groups as $pi_group) {
             if ($pi_group["gidnumber"][0] == $id) {
@@ -178,14 +185,9 @@ class UnityLDAP extends ldapConn
             }
         }
 
-        return false;
-    }
-
-    private function GIDNumInUse($id)
-    {
-        $groups = $this->groupOU->getChildrenArray(true);
-        foreach ($groups as $group) {
-            if ($group["gidnumber"][0] == $id) {
+        $pi_groups = $this->org_groupOU->getChildrenArray(true);
+        foreach ($pi_groups as $pi_group) {
+            if ($pi_group["gidnumber"][0] == $id) {
                 return true;
             }
         }
