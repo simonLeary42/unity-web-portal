@@ -185,9 +185,9 @@ class UnityLDAP extends ldapConn
             }
         }
 
-        $pi_groups = $this->org_groupOU->getChildrenArray(true);
-        foreach ($pi_groups as $pi_group) {
-            if ($pi_group["gidnumber"][0] == $id) {
+        $org_groups = $this->org_groupOU->getChildrenArray(true);
+        foreach ($org_groups as $org_group) {
+            if ($org_group["gidnumber"][0] == $id) {
                 return true;
             }
         }
